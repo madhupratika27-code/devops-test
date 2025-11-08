@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: '<https://github.com/madhupratika27-code/devops-test.git>'
+                git branch: 'main', url: 'https://github.com/madhupratika27-code/devops-test.git'
             }
         }
         stage('Build Docker Image') {
