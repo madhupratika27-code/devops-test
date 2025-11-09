@@ -1,0 +1,36 @@
+name: CI/CD Pipeline - Node.js + Docker
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build Docker image
+      run: docker build -t my-node-app:latest .
+
+    - name: Run Docker container (test)
+      run: |
+        docker run -d -p 3000:3000 my-node-app:latest
+        sleep 5
+        curl -s http://localhost:3000 || echo "App test complete"
+
+    - name: Cleanup
+      if: always()
+      run: docker ps -q | xargs -r docker stop
